@@ -1,0 +1,153 @@
+openapi: 3.1.0
+info:
+  title: Velora Platform API
+  version: 0.1.0
+  description: Production contract baseline. Current repository implements health and demo compliance status only.
+servers:
+  - url: /api
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, service, version, timestamp]
+                properties:
+                  status: { const: ok }
+                  service: { type: string }
+                  version: { type: string }
+                  timestamp: { type: string, format: date-time }
+  /compliance/status:
+    get:
+      operationId: getComplianceStatus
+      parameters:
+        - in: query
+          name: userId
+          schema: { type: string, format: uuid }
+      responses:
+        "200": { description: Purpose-limited capability status }
+        "400": { $ref: "#/components/responses/BadRequest" }
+  /identity/sessions:
+    post:
+      operationId: createIdentitySession
+      security: [{ session: [] }]
+      parameters: [{ $ref: "#/components/parameters/IdempotencyKey" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [purpose, returnPath]
+              properties:
+                purpose: { enum: [viewer_age, creator_identity, payout_identity] }
+                returnPath: { type: string, pattern: "^/" }
+      responses:
+        "201":
+          description: Vendor-hosted session
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [sessionId, redirectUrl, expiresAt]
+                properties:
+                  sessionId: { type: string, format: uuid }
+                  redirectUrl: { type: string, format: uri }
+                  expiresAt: { type: string, format: date-time }
+  /content/upload-intents:
+    post:
+      operationId: createUploadIntent
+      security: [{ session: [] }]
+      parameters: [{ $ref: "#/components/parameters/IdempotencyKey" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [kind, mime, bytes, checksum]
+              properties:
+                kind: { enum: [image, video, audio] }
+                mime: { type: string }
+                bytes: { type: integer, minimum: 1 }
+                checksum: { type: string }
+      responses:
+        "201": { description: Short-lived, single-object quarantine upload credential }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /content/{contentId}/publish:
+    post:
+      operationId: publishContent
+      security: [{ session: [] }]
+      parameters:
+        - $ref: "#/components/parameters/ContentId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "200": { description: Published or scheduled }
+        "409": { description: State or gate conflict }
+  /checkout/sessions:
+    post:
+      operationId: createCheckoutSession
+      security: [{ session: [] }]
+      parameters: [{ $ref: "#/components/parameters/IdempotencyKey" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [purpose, targetId]
+              properties:
+                purpose: { enum: [membership, unlock, tip] }
+                targetId: { type: string, format: uuid }
+      responses:
+        "201": { description: Processor-hosted checkout session; never contains card fields }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /webhooks/{provider}:
+    post:
+      operationId: receiveProviderWebhook
+      parameters:
+        - in: path
+          name: provider
+          required: true
+          schema: { enum: [identity, payment, moderation] }
+      responses:
+        "202": { description: Signature-verified event durably accepted }
+        "400": { description: Invalid event }
+        "401": { description: Invalid signature or replay window }
+  /media/{assetId}/access:
+    post:
+      operationId: createMediaAccessToken
+      security: [{ session: [] }]
+      parameters:
+        - in: path
+          name: assetId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200": { description: Short-lived audience-bound delivery token }
+        "403": { $ref: "#/components/responses/Forbidden" }
+components:
+  securitySchemes:
+    session:
+      type: apiKey
+      in: cookie
+      name: __Host-velora_session
+  parameters:
+    IdempotencyKey:
+      in: header
+      name: Idempotency-Key
+      required: true
+      schema: { type: string, minLength: 16, maxLength: 128 }
+    ContentId:
+      in: path
+      name: contentId
+      required: true
+      schema: { type: string, format: uuid }
+  responses:
+    BadRequest: { description: Invalid request }
+    Forbidden: { description: Capability gate denied with safe reason code }

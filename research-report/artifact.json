@@ -1,0 +1,170 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "A Trust-Led Creator Platform",
+    "description": "Product research and implementation recommendation for Velora.",
+    "generatedAt": "2026-08-02T00:00:00Z",
+    "cards": [],
+    "charts": [
+      {
+        "id": "fenix_scale_chart",
+        "title": "Fenix International FY2024 financial scale",
+        "subtitle": "Gross fan payments, platform revenue, and pre-tax profit; USD billions",
+        "type": "bar",
+        "dataset": "fenix_financial_scale",
+        "sourceId": "fenix_accounts_2024",
+        "valueFormat": "number",
+        "encodings": {
+          "x": { "field": "metric", "type": "nominal", "label": "Metric" },
+          "y": { "field": "usd_billions", "type": "quantitative", "label": "USD billions" },
+          "tooltip": [
+            { "field": "usd_billions", "type": "quantitative", "label": "USD billions", "format": "number" },
+            { "field": "interpretation", "type": "nominal", "label": "Interpretation" }
+          ]
+        }
+      }
+    ],
+    "tables": [
+      {
+        "id": "product_priority_table",
+        "title": "Recommended product sequence",
+        "subtitle": "Priorities reflect fan value, creator value, risk, and operating cost",
+        "dataset": "product_priorities",
+        "sourceId": "research_synthesis",
+        "defaultSort": { "field": "priority_rank", "direction": "asc" },
+        "columns": [
+          { "field": "priority_rank", "label": "Order", "type": "number" },
+          { "field": "phase", "label": "Phase", "type": "text" },
+          { "field": "capability", "label": "Capability", "type": "text" },
+          { "field": "reason", "label": "Why now", "type": "text" },
+          { "field": "launch_condition", "label": "Launch condition", "type": "text" }
+        ]
+      }
+    ],
+    "sources": [
+      { "id": "fenix_accounts_2024", "label": "Fenix International FY2024 accounts", "path": "sources/fenix-international-fy2024" },
+      { "id": "research_synthesis", "label": "Velora product research synthesis", "path": "docs/01-product-research.md" },
+      { "id": "ofcom_fenix", "label": "Ofcom Fenix enforcement decision", "path": "sources/ofcom-fenix-2025" },
+      { "id": "ncmec_2025", "label": "NCMEC CyberTipline 2025 report", "path": "sources/ncmec-cybertipline-2025" }
+    ],
+    "blocks": [
+      { "id": "title", "type": "markdown", "body": "# A Trust-Led Creator Platform" },
+      {
+        "id": "executive_summary",
+        "type": "markdown",
+        "body": "## Executive Summary\n\n- **Build a trust-led membership product, not a visual clone.** Velora's strongest wedge is calm in-product discovery plus creator-facing retention, payout, and safety transparency.\n- **Treat verification, moderation, payment, and ledger controls as the product.** They must block restricted viewing, publication, monetization, and payout in request paths, with certified vendors and staffed operations before a paid launch.\n- **Ship a modular foundation before a microservice fleet.** Keep identity, moderation, payment, and ledger boundaries explicit, but start with fewer deployables and data systems until real scale or ownership needs justify extraction.\n- **Use the implemented MVP for product learning only.** The current application is a polished safe demo; real vendor contracts, underwriting, reporting registration, legal decisions, and operational readiness remain launch gates."
+      },
+      {
+        "id": "category_scale",
+        "type": "markdown",
+        "sourceId": "fenix_accounts_2024",
+        "body": "## Category scale proves demand, not typical creator success\n\nFenix International reported about **$7.22B in gross fan payments**, **$1.41B in platform revenue**, and **$684M in pre-tax profit** for FY2024. Its filing also reported 4.63M creator accounts and 377.46M fan accounts. These are account and payment-flow measures—not active-user, retention, unique-person, or median creator-income measures.\n\n**So what:** the category can support a large business, but Velora must validate active paying relationships and creator retention rather than use registrations as its operating target."
+      },
+      { "id": "fenix_chart_block", "type": "chart", "chartId": "fenix_scale_chart" },
+      {
+        "id": "chart_note",
+        "type": "markdown",
+        "body": "The chart separates fan payment flow from the platform's own revenue and profit. The large gap is a reminder that marketplace scale and platform economics are different measures; neither shows how evenly creators earn."
+      },
+      {
+        "id": "differentiation",
+        "type": "markdown",
+        "body": "## Discovery and creator operations are the defensible wedge\n\nFansly's built-in For You Page and Patreon's current discovery positioning both validate that creators want demand generation inside the product. Velora should combine transparent recommendations and valuable free previews with tools that make member retention, disputes, reserves, content state, and payout timing understandable.\n\n**Product implication:** compete on creator outcome quality and operational trust, not only platform take rate."
+      },
+      { "id": "priority_table_block", "type": "table", "tableId": "product_priority_table" },
+      {
+        "id": "architecture_recommendation",
+        "type": "markdown",
+        "body": "## A production-shaped MVP needs fewer systems and stronger boundaries\n\nUse Next.js for the public and authenticated product shell, PostgreSQL as the default system of record, a transactional outbox for reliable asynchronous work, private object-storage zones for quarantine/evidence/originals/previews, and provider adapters for identity, moderation, payments, and payouts. Extract those high-risk workloads first when independent security or reliability ownership becomes necessary.\n\n**Why this matters:** operating ten services, five databases, and Kafka from day one would increase failure modes before it improves customer value."
+      },
+      {
+        "id": "trust_controls",
+        "type": "markdown",
+        "sourceId": "ofcom_fenix",
+        "body": "## Configuration governance matters as much as vendor selection\n\nOfcom fined Fenix **£1.05M** in March 2025 for inaccurate responses about its age-assurance configuration. The lesson is not simply to buy facial age estimation: record policy and configuration versions, test them, reconcile vendor state, and require accountable review before regulatory statements.\n\nSuspected illegal material must be blocked from publication and handled through segregated evidence and reporting procedures. Automated signals are inputs to a controlled process, not a substitute for it."
+      },
+      {
+        "id": "next_steps",
+        "type": "markdown",
+        "body": "## Recommended Next Steps\n\n1. Choose the launch entity, jurisdictions, initial creator category, and permitted-content policy.\n2. Obtain payment underwriting and total economics before promising a take rate.\n3. Run synthetic proof-of-concepts for age assurance, creator identity, and media safety.\n4. Test the implemented discovery, profile, verification, and creator-studio journeys with 10–20 design partners.\n5. Implement accounts, quarantine media, hosted checkout, double-entry ledger, reporting, reconciliation, and privileged operations before a paid beta.\n6. Run at least two renewal cycles under closed-beta guardrails before public launch."
+      },
+      {
+        "id": "further_questions",
+        "type": "markdown",
+        "body": "## Further Questions\n\n- Which content categories and jurisdictions make the first cohort focused enough to operate safely?\n- What total creator cost follows real underwriting, reserves, disputes, verification, moderation, support, and taxes?\n- Can discovery produce retained paying relationships without incentivizing unsafe or low-trust content?\n- Which user data should creators be able to export, and under what privacy controls?\n- What evidence would justify live streaming or stored-value wallets later?"
+      },
+      {
+        "id": "caveats",
+        "type": "markdown",
+        "body": "## Caveats and Assumptions\n\nThe research is current to August 2, 2026 and is not legal advice. Public company account totals do not establish active usage or typical earnings. Vendor, processor, card-network, tax, reporting, identity, performer-record, and privacy obligations depend on the final entity, jurisdiction, content policy, and negotiated contracts. The repository uses synthetic data and safe-demo adapters only."
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-02T00:00:00Z",
+    "status": "ready",
+    "datasets": {
+      "fenix_financial_scale": [
+        { "metric": "Gross fan payments", "usd_billions": 7.22, "interpretation": "Total fan transaction flow", "fiscal_year": 2024, "currency": "USD" },
+        { "metric": "Platform revenue", "usd_billions": 1.41, "interpretation": "Fenix reported revenue", "fiscal_year": 2024, "currency": "USD" },
+        { "metric": "Pre-tax profit", "usd_billions": 0.684, "interpretation": "Profit before tax", "fiscal_year": 2024, "currency": "USD" }
+      ],
+      "product_priorities": [
+        { "priority_rank": 1, "phase": "MVP", "capability": "Discovery and safe previews", "reason": "Creates fan and creator value before payment", "launch_condition": "Eligibility-aware index and approved preview policy" },
+        { "priority_rank": 2, "phase": "MVP", "capability": "Identity and age assurance", "reason": "Controls restricted access and monetization", "launch_condition": "Certified vendor, policy, fallback, and audit" },
+        { "priority_rank": 3, "phase": "MVP", "capability": "Memberships and ledger", "reason": "Validates durable creator income", "launch_condition": "Underwriting, hosted checkout, reconciliation" },
+        { "priority_rank": 4, "phase": "MVP", "capability": "Posts, reports, and creator studio", "reason": "Delivers content value and operational trust", "launch_condition": "Pre-publish safety and staffed response" },
+        { "priority_rank": 5, "phase": "Next", "capability": "One-time releases and messaging", "reason": "Expands revenue and relationship depth", "launch_condition": "Abuse, refund, dispute, and entitlement maturity" },
+        { "priority_rank": 6, "phase": "Later", "capability": "Live streaming and stored value", "reason": "High engagement but high operational risk", "launch_condition": "Separate safety, payments, and staffing review" }
+      ]
+    },
+    "accessIssues": []
+  },
+  "sources": [
+    {
+      "id": "fenix_accounts_2024",
+      "query": {
+        "engine": "document_review",
+        "description": "Reviewed Fenix International filing and reported FY2024 financial and account metrics.",
+        "sql": "SELECT metric, usd_billions, interpretation, fiscal_year, currency FROM (VALUES ('Gross fan payments', 7.22, 'Total fan transaction flow', 2024, 'USD'), ('Platform revenue', 1.41, 'Fenix reported revenue', 2024, 'USD'), ('Pre-tax profit', 0.684, 'Profit before tax', 2024, 'USD')) AS reviewed_fenix_metrics(metric, usd_billions, interpretation, fiscal_year, currency)",
+        "url": "https://find-and-update.company-information.service.gov.uk/company/10354575/filing-history",
+        "executed_at": "2026-08-02T00:00:00Z",
+        "language": "text"
+      }
+    },
+    {
+      "id": "research_synthesis",
+      "query": {
+        "engine": "document_review",
+        "description": "Velora product research synthesis derived from supplied briefs and authoritative public sources.",
+        "sql": "SELECT priority_rank, phase, capability, reason, launch_condition FROM reviewed_product_priorities ORDER BY priority_rank ASC",
+        "tables_used": ["reviewed_product_priorities"],
+        "executed_at": "2026-08-02T00:00:00Z",
+        "language": "markdown"
+      }
+    },
+    {
+      "id": "ofcom_fenix",
+      "query": {
+        "engine": "web",
+        "description": "Ofcom enforcement outcome concerning inaccurate Fenix age-assurance information.",
+        "url": "https://www.ofcom.org.uk/online-safety/protecting-children/ofcom-fines-provider-of-onlyfans-1.05-million",
+        "executed_at": "2026-08-02T00:00:00Z",
+        "language": "text"
+      }
+    },
+    {
+      "id": "ncmec_2025",
+      "query": {
+        "engine": "web",
+        "description": "NCMEC CyberTipline 2025 reporting data and statutory reporting context.",
+        "url": "https://www.ncmec.org/gethelpnow/cybertipline/cybertiplinedata",
+        "executed_at": "2026-08-02T00:00:00Z",
+        "language": "text"
+      }
+    }
+  ]
+}
